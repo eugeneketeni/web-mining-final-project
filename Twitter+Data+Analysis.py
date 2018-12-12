@@ -8,6 +8,10 @@ import nltk, string
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
 import csv
+from nltk import ne_chunk, pos_tag
+from nltk.tree import Tree
+import spacy
+
 #Test data
 #data = pd.read_csv("https://raw.githubusercontent.com/eugeneketeni/web-mining-final-project/master/Test_file.csv")
 
@@ -20,6 +24,28 @@ pd.set_option('display.max_colwidth', -1)
 
 print(data['text'].head())
 data['text'] = data['text'].astype(str)
+
+# #Named Entity Recognition
+# nlp = spacy.load('en')
+
+
+
+# for index, row in data.iterrows():
+#     newText = nlp(row['text'])
+#     print('--------------')
+#     print(newText)
+#     print('--------------')
+#     #tweets = nlp([text['text']])
+
+# def label_words(tweet):
+#     doc = nlp(tweet)
+
+
+#     return label
+
+# data['labels'] = data['text'].apply(label_words)
+# print(data['labels'])
+
 
 #Working and Scoring
 analyser = SentimentIntensityAnalyzer()
@@ -47,6 +73,15 @@ for index, row in data.iterrows():
             fields = [pos, neg]
             writer = csv.writer(fd)
             writer.writerow(fields)
+    if 'obama' in row['text']:
+        print(sentiment_analyzer_scores(row['text']))
+        sentiment = sentiment_analyzer_scores(row['text'])
+        pos = sentiment['pos']
+        neg = sentiment['neg']
+        with open('obama_sentiment.csv','a') as fd:
+            fields = [pos, neg]
+            writer = csv.writer(fd)
+            writer.writerow(fields)           
     if 'russia' in row['text']:
         print(sentiment_analyzer_scores(row['text']))
         sentiment = sentiment_analyzer_scores(row['text'])
@@ -92,11 +127,3 @@ def processRow(row):
 
 data['text'] = data['text'].apply(processRow)
 print(data['text'].head())
-
-
-
-
-
-
-
-
